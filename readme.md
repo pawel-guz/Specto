@@ -16,7 +16,7 @@ Below you can see a complete schematic of the lighting control circuit. Power ad
 ## Basic board code
 Specto can send visualization data to your board via SerialPort or WiFi - direct or network connection (work in progress). See simple receiver code down below. If you want wireless option, see [Specto Receiver](). Using the first option is easier. Just plug in your DIY device, run Specto, enter Device manager tab in Specto and refresh if necessary. That's all, everything should work automatically. But be aware of bugs.
 
-```
+```c
 // SIMPLE SPECTO RECEIVER by gp
 // 255 (NEW) represents the new color transmission or handshake request ahead.
 // RGB values are in (0, 254) range.
