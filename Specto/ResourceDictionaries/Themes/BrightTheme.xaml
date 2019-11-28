@@ -1,0 +1,43 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:Specto"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="../DefaultSlider.xaml"/>
+        <ResourceDictionary Source="../DefaultButton.xaml"/>
+        <ResourceDictionary Source="../DefaultOther.xaml"/>
+        <ResourceDictionary Source="../DefaultComboBox.xaml"/>
+        <ResourceDictionary Source="../BrightThemeIcons.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+        
+    <Color x:Key="DisabledThumbColor">#FFC5CBF9</Color>
+    <Color x:Key="ThumbLightColor">#FFCCCCCC</Color>
+    <Color x:Key="ThumbMediumColor">#FFCCCCCC</Color>
+    <Color x:Key="ThumbMouseoverColor">#FFBBBBBB</Color>
+    <Color x:Key="ThumbPressedColor">#FFAAAAAA</Color>
+    <Color x:Key="ThumbBorderLightColor">#00000000</Color>
+    <Color x:Key="ThumbBorderDarkColor">#00000000</Color>
+    <Color x:Key="SliderTrackBorderLightColor">#00000000</Color>
+    <Color x:Key="SliderTrackBorderDarkColor">#00000000</Color>
+    <Color x:Key="SliderTrackLightColor">#FFF4F4F4</Color>
+    <Color x:Key="SliderTrackDarkColor">#FFF4F4F4</Color>
+    <Color x:Key="TickBarFillColor">#FF444444</Color>
+
+    <SolidColorBrush x:Key="CheckBoxColor">#FFCCCCCC</SolidColorBrush>
+    <SolidColorBrush x:Key="BackgroundColor">#FFFFFFFF</SolidColorBrush>
+    <SolidColorBrush x:Key="FramesColor">#FFDFDFDF</SolidColorBrush>
+    <SolidColorBrush x:Key="TextColor">#FF444444</SolidColorBrush>
+    <SolidColorBrush x:Key="TextColorSecondary">#FF848484</SolidColorBrush>
+    <SolidColorBrush x:Key="TextColorNotAttracting">#FFC4C4C4</SolidColorBrush>
+    <SolidColorBrush x:Key="OppositeTextColor">#FFDDDDDD</SolidColorBrush>
+
+    <sys:Double x:Key="IconOpacityNormal">0.45</sys:Double>
+    <sys:Double x:Key="IconOpacityMouseOver">0.3</sys:Double>
+    <sys:Double x:Key="IconOpacityInActive">0.15</sys:Double>
+    <sys:Double x:Key="TextOpacityNormal">1</sys:Double>
+    <sys:Double x:Key="TextOpacityMouseOver">0.5</sys:Double>
+    <sys:Double x:Key="TextOpacityInActive">0.25</sys:Double>
+    <sys:Double x:Key="IconSize">30</sys:Double>
+    <sys:Double x:Key="FontSizeNormal">14</sys:Double>
+</ResourceDictionary>

@@ -1,0 +1,30 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:Specto">
+
+
+    <Image x:Key="HueIcon" Source="pack://application:,,,/Resources/Icons/Simple/icons8-color-wheel-50-white.png"/>
+    <Image x:Key="PaletteIcon" Source="pack://application:,,,/Resources/Icons/Simple/icons8-paint-palette-50-white.png"/>
+    <Image x:Key="SaturationIcon" Source="pack://application:,,,/Resources/Icons/Simple/icons8-saturation-50-white.png"/>
+    <Image x:Key="BrightnessIcon" Source="pack://application:,,,/Resources/Icons/Simple/icons8-sun-50-white.png"/>
+    <Image x:Key="SamplingRateIcon" Source="pack://application:,,,/Resources/Icons/Simple/icons8-neutral-trading-50-white.png"/>
+    <Image x:Key="ColorVariabilityIcon" Source="pack://application:,,,/Resources/Icons/Simple/icons8-one-way-transition-50-white.png"/>
+    <Image x:Key="SmoothingIcon" Source="pack://application:,,,/Resources/Icons/Simple/icons8-quick-mode-on-50-white.png"/>
+    <Image x:Key="BassPulsationIcon" Source="pack://application:,,,/Resources/Icons/Simple/icons8-circled-b-50-white.png"/>
+    <Image x:Key="SlidersIcon" Source="pack://application:,,,/Resources/Icons/Simple/icons8-tune-50-white.png"/>
+    <Image x:Key="RestoreIcon" Source="pack://application:,,,/Resources/Icons/Simple/icons8-reboot-50-white.png"/>
+    <Image x:Key="SaveIcon" Source="pack://application:,,,/Resources/Icons/Simple/icons8-save-50-white.png"/>
+    <Image x:Key="ChangeThemeIcon" Source="pack://application:,,,/Resources/Icons/Simple/icons8-change-theme-50-white.png"/>
+    <Image x:Key="RefreshIcon" Source="pack://application:,,,/Resources/Icons/Simple/icons8-search-50-white.png"/>
+    <Image x:Key="DeviceManagerIcon" Source="pack://application:,,,/Resources/Icons/Simple/icons8-device-manager-50-white.png"/>
+    <Image x:Key="AdaptiveThresholdIcon" Source="pack://application:,,,/Resources/Icons/Simple/icons8-circled-a-50-white.png"/>
+    <Image x:Key="AboutIcon" Source="pack://application:,,,/Resources/Icons/Simple/icons8-info-50-white.png"/>
+    <Image x:Key="FullScreenIcon" Source="pack://application:,,,/Resources/Icons/Simple/icons8-full-screen-50-white.png"/>
+    <Image x:Key="NormalScreenIcon" Source="pack://application:,,,/Resources/Icons/Simple/icons8-normal-screen-50-white.png"/>
+    
+    <BitmapImage x:Key="ToggleOnIcon" UriSource="/Resources/Icons/Simple/icons8-toggle-on-50-white.png"/>
+    <BitmapImage x:Key="ToggleOffIcon" UriSource="/Resources/Icons/Simple/icons8-toggle-off-50-white.png"/>
+    <BitmapImage x:Key="WiFiIcon" UriSource="/Resources/Icons/Simple/icons8-wi-fi-50-white.png"/>
+    <BitmapImage x:Key="SerialIcon" UriSource="/Resources/Icons/Simple/icons8-rs-232-male-50-white.png"/>
+    <BitmapImage x:Key="ConfigureDeviceIcon" UriSource="/Resources/Icons/Simple/icons8-database-administrator-50-white.png"/>
+</ResourceDictionary>

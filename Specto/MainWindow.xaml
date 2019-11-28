@@ -1,0 +1,210 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Specto"
+        x:Name="SpectoMain" x:Class="Specto.MainWindow"
+        mc:Ignorable="d"
+        Title="Specto" Height="500" Width="500" 
+        WindowState="Normal"
+        MinHeight="500" MinWidth="500" WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/> 
+    </Window.Resources>
+
+    <Grid Background="{DynamicResource BackgroundColor}" Margin="20"
+          Opacity="{Binding ThemeOpacity}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="30"/>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="30"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="35"/>
+            <RowDefinition/>
+            <RowDefinition Height="35"/>
+        </Grid.RowDefinitions>
+        
+        <!--Main panel-->
+        <Grid   Visibility="Visible"
+                x:Name="MainPanel"
+                Grid.Row="1" Grid.Column="1"
+                MaxWidth="500" MaxHeight="500">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="0"/>
+                <RowDefinition/>
+                <RowDefinition Height="50"/>
+                <RowDefinition x:Name="SettingsMargin" Height="20"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="25"/>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="5*"/>
+                <ColumnDefinition Width="5*"/>
+                <ColumnDefinition Width="5*"/>
+                <ColumnDefinition Width="5*"/>
+                <ColumnDefinition Width="5*"/>
+                <ColumnDefinition Width="5*"/>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="25"/>
+            </Grid.ColumnDefinitions>
+            <local:SettingSliderWithIcon Grid.Row="1" Grid.Column="0"
+                                         SliderPosition="Right" SliderOrientation="Vertical"
+                                         Value="{Binding AmplitudeThreshold, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MinValue="0.0" MaxValue="1.0"
+                                         ToolTip="Threshold"/>
+
+            <local:BarSpectrumVizualization x:Name="Drawer"
+                                            Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="8"
+                                            BarsNumber="{Binding BarsNumber, Mode=TwoWay}" 
+                                            MinBars="4" MaxBars="{Binding SamplingResolution}"
+                                            BarMargin="3" Padding="0, 20, 0, 0"
+                                            
+                                            MainColor="Black"/>
+            <local:SettingSliderWithIcon Grid.Row="1" Grid.Column="9"
+                                         SliderPosition="Left" SliderOrientation="Vertical"
+                                         
+                                         Value="{Binding AmplitudeCutoff, Mode=TwoWay}" MinValue="0.0" MaxValue="1.0"
+                                         ToolTip="Cutoff"/>
+            <local:SettingSliderWithIcon Grid.Row="2" Grid.Column="2"
+                                         Icon="{DynamicResource PaletteIcon}"
+                                         Value="{Binding HueShift, Mode=TwoWay}" MinValue="0" MaxValue="1"
+                                         ToolTip="Hue"/>
+            <local:SettingSliderWithIcon Grid.Row="2" Grid.Column="3"
+                                         Icon="{DynamicResource SaturationIcon}"
+                                         Value="{Binding SaturationModifier, Mode=TwoWay}" MinValue="-1.0" MaxValue="1.0"
+                                         ToolTip="Saturation"/>
+            <local:SettingSliderWithIcon Grid.Row="2" Grid.Column="4"
+                                         Icon="{DynamicResource BrightnessIcon}"     
+                                         Value="{Binding BrightnessModifier, Mode=TwoWay}" MinValue="-1.0" MaxValue="1.0"
+                                         ToolTip="Brightness"/>
+            <local:SettingSliderWithIcon Grid.Row="2" Grid.Column="5"
+                                         Icon="{DynamicResource SamplingRateIcon}"  
+                                         Value="{Binding SamplingRate, Mode=TwoWay}" MinValue="1.0" MaxValue="25.0"
+                                         ToolTip="Sampling rate"/>
+            <local:SettingSliderWithIcon Grid.Row="2" Grid.Column="6"
+                                         Icon="{DynamicResource ColorVariabilityIcon}"  
+                                         Value="{Binding ColorVariability, Mode=TwoWay}" MinValue="0.0" MaxValue="1.0"
+                                         ToolTip="Color variability"/>
+            <local:SettingSliderWithIcon Grid.Row="2" Grid.Column="7"
+                                         Icon="{DynamicResource SmoothingIcon}"  
+                                         Value="{Binding SpectrumSmoothing, Mode=TwoWay}" MinValue="0.0" MaxValue="0.99"
+                                         ToolTip="Smoothing"/>
+
+            <Button Grid.Row="2" Grid.Column="8" VerticalAlignment="Bottom" Margin="0, 0, 0, 6" Width="20"
+                    x:Name="Pulsation"
+                    Click="PulsationButton_Click"
+                    ToolTip="Bass pulsation"
+                    Content="{DynamicResource BassPulsationIcon}"
+                    Visibility="{Binding ShowSettings, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+            <Button Grid.Row="2" Grid.Column="1" VerticalAlignment="Bottom" Margin="0, 0, 0, 6" Width="20"
+                    x:Name="AutoThreshold"
+                    Click="AutoThreshold_Click"
+                    ToolTip="Adaptive threshold"
+                    Content="{DynamicResource AdaptiveThresholdIcon}"
+                    Visibility="{Binding ShowSettings, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+        </Grid>
+
+        <!--Device mangager-->
+        <Grid x:Name="DeviceManager" Visibility="Collapsed"
+              Grid.Column="1" Grid.Row="1" MaxWidth="500" MaxHeight="500">
+            <DockPanel>
+                <DockPanel DockPanel.Dock="Top" Height="30">
+                    <Label DockPanel.Dock="Left" Content="Detected devices:"/>
+
+                    <Button Margin="5" Content="{DynamicResource RefreshIcon}"
+                            Click="RefreshButton_Click" HorizontalAlignment="Right"
+                            ToolTip="Rescan"/>
+                </DockPanel>
+
+                <ListView Padding="0" HorizontalContentAlignment="Stretch" 
+                          Background="Transparent" BorderThickness="0"
+                          x:Name="Devices" ScrollViewer.HorizontalScrollBarVisibility="Disabled" >
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="{x:Type ListViewItem}">
+                            <Setter Property="Focusable" Value="False"/>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <DockPanel Background="Transparent" >
+                                <DockPanel  DockPanel.Dock="Top" Height="30">
+                                    <CheckBox Margin="10, 0" VerticalAlignment="Center"
+                                              IsChecked="{Binding IsActive}"/>
+                                    <Image  Margin="5"
+                                           Source="{DynamicResource WiFiIcon}"
+                                           Visibility="{Binding IsWiFi, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                    <Image Margin="5"
+                                           Source="{DynamicResource SerialIcon}"
+                                           Visibility="{Binding IsSerial, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                    <Label VerticalAlignment="Center" Content="Serial No.:"/>
+                                    <Label 
+                                           VerticalAlignment="Center"
+                                           Content="{Binding SerialNumber}"/>
+
+                                    <Grid  HorizontalAlignment="Right"
+                                                Visibility="{Binding IsWiFi, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                        <ToggleButton VerticalAlignment="Stretch" x:Name="DeviceItemToggle" ToolTip="Configure device">
+                                            <Image  Margin="5" Source="{DynamicResource ConfigureDeviceIcon}"/>
+                                        </ToggleButton>
+
+                                    </Grid>
+                                </DockPanel>
+
+                                <local:WiFiSetter DockPanel.Dock="Bottom"
+                                      Margin="10,0,0,0"
+                                      Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, ElementName=DeviceItemToggle}"/>
+                            </DockPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </DockPanel>
+        </Grid>
+
+        <!--Right settings panel-->
+        <DockPanel Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="1" Margin="0, 0, 10, 5"
+                   VerticalAlignment="Center" HorizontalAlignment="Right">
+
+            <Button Margin="5, 5" Content="{DynamicResource AboutIcon}"
+                    Click="AboutButton_Click"
+                    ToolTip="About"
+                    Visibility="{Binding ShowSettings, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+            <Button Margin="5, 5" Content="{DynamicResource RestoreIcon}"
+                    Click="RestoreButton_Click"
+                    ToolTip="Restore"
+                    Visibility="{Binding ShowSettings, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+            <Button Margin="0, 5"   Content="{DynamicResource SaveIcon}"
+                    Click="SaveButton_Click"
+                    ToolTip="Save"
+                    Visibility="{Binding ShowSettings, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+            <ToggleButton Margin="5, 5"   Content="{DynamicResource DeviceManagerIcon}"
+                    Click="DeviceManagerButton_Click"
+                    ToolTip="Device manager" 
+                    Visibility="{Binding ShowSettings, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+            <Button Margin="0, 5"   Content="{DynamicResource ChangeThemeIcon}"
+                    Click="ChangeThemeButton_Click"
+                    ToolTip="Change theme" 
+                    Visibility="{Binding ShowSettings, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+            <Slider Orientation="Vertical" Margin="5, 5" 
+                    x:Name="ThemeOpacity" Value="{Binding ThemeOpacity, Mode=TwoWay}" Minimum="0.5" Maximum="1"
+                    Visibility="{Binding ShowSettings, Converter={StaticResource BooleanToVisibilityConverter}}" Background="Black"/>
+            <ToggleButton Margin="0, 5" Content="{DynamicResource SlidersIcon}"
+                    IsChecked="{Binding ShowSettings, Mode=TwoWay}"
+                    ToolTip="Settings"
+                    Click="SettingsButton_Click"/>
+            <Button Name="FullScreenButton" Margin="0, 5"   
+                    Content="{DynamicResource FullScreenIcon}"
+                    Click="FullScreenButton_Click"
+                    ToolTip="Full screen" /> 
+        </DockPanel>
+
+        <!--Left log-->
+        <DockPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Width="180" Margin="10, 0, 0, 5" HorizontalAlignment="Left">
+            <Label x:Name="StatusInfo"
+                   FontSize="10"
+                   Foreground="{DynamicResource TextColorNotAttracting}" 
+                   VerticalAlignment="Center"
+                   Content="{Binding Text}"/>
+        </DockPanel>
+    </Grid>
+</Window>
