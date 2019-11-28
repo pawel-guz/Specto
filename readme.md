@@ -16,7 +16,7 @@ Below you can see a complete schematic of the lighting control circuit. Power ad
 ## Basic board code
 Specto can send visualization data to your board via SerialPort or WiFi - direct or network connection (work in progress). See simple receiver code down below. If you want wireless option, see [Specto Receiver](). Using the first option is easier. Just plug in your DIY device, run Specto, enter Device manager tab in Specto and refresh if necessary. That's all, everything should work automatically. But be aware of bugs.
 
-```
+```c
 // SIMPLE SPECTO RECEIVER by gp
 // 255 (NEW) represents the new color transmission or handshake request ahead.
 // RGB values are in (0, 254) range.
@@ -53,23 +53,23 @@ void setup()
 
 void loop()
 {
-	while (Serial.available())
-	{
-		data = (byte)Serial.read();
+    while (Serial.available())
+    {
+        data = (byte)Serial.read();
 
-		// Process signal.
-		if (data == SERIAL_SIGNAL)
-		{
+        // Process signal.
+        if (data == SERIAL_SIGNAL)
+        {
             // Really basic handshake. This response is recognized by Specto.
-			if (state == AWAIT)
-				Serial.write(SERIAL_SIGNAL); 
-			else
-				state = AWAIT;
-		}
-		else
-		{
-			// Process color transmission. State machine.
-			switch (state) 
+            if (state == AWAIT)
+                Serial.write(SERIAL_SIGNAL); 
+            else
+                state = AWAIT;
+        }
+        else
+        {
+            // Process color transmission. State machine.
+            switch (state) 
             {
                 case AWAIT:
                 case RED:
@@ -88,10 +88,9 @@ void loop()
                 default:
                     state = END; 
                     break;
-			}
-		}
-	}
-	return 0;
+            }
+        }
+    } 
 }
 
 void setColor(const int *r, const int *g, const int *b)
