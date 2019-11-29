@@ -107,6 +107,8 @@ void setColor(const int *r, const int *g, const int *b)
     analogWrite(BLUE, b); 
 }
 ```
+## Download
+[Specto 0.9.1]() (.msi)
 
 ## License
 [MS-PL](https://opensource.org/licenses/MS-PL)
