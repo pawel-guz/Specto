@@ -191,4 +191,8 @@ StyleCop.Cache
 bin
 obj
 /**/bin/Debug
-**/bin/Release/
+/**/bin/Release
+
+!Specto/bin/Release/Specto.exe
+!Specto/bin/Release/Newtonsoft.Json.dll
+!Specto/bin/Release/CSCore.dll
