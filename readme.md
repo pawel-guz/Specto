@@ -1,8 +1,8 @@
 
-#
 ![alt Specto icon](Images/icon-flat.png) 
 # Specto (music  visualizer)
 
+#### Related: [SpectoReceiver](https://github.com/pawel-guz/Specto-Receiver)
 Specto is a simple app visualising the music you listen to. Combining it with Arduino-like boards and LED stripes allows creation of original lighting changing to the rhytm of your system sounds. Download and launch the app, connect it with your own, self-made circuit and relax. Specto will try to make this moment a pleasant one!
 
 ## How does it work?
