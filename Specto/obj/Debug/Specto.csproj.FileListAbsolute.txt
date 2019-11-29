@@ -8,7 +8,6 @@ D:\pguzp\Documents\GitHub\Specto\Specto\bin\Debug\Newtonsoft.Json.dll
 D:\pguzp\Documents\GitHub\Specto\Specto\bin\Debug\CSCore.xml
 D:\pguzp\Documents\GitHub\Specto\Specto\bin\Debug\Newtonsoft.Json.pdb
 D:\pguzp\Documents\GitHub\Specto\Specto\bin\Debug\Newtonsoft.Json.xml
-D:\pguzp\Documents\GitHub\Specto\Specto\obj\Debug\Specto.csprojAssemblyReference.cache
 D:\pguzp\Documents\GitHub\Specto\Specto\obj\Debug\Controls\SettingSliderWithIcon.baml
 D:\pguzp\Documents\GitHub\Specto\Specto\obj\Debug\Controls\WiFiSetter.baml
 D:\pguzp\Documents\GitHub\Specto\Specto\obj\Debug\Controls\BarSpectrumVisualization.baml
