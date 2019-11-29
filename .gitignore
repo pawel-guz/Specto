@@ -9,13 +9,13 @@
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/
-[Rr]elease/
+[Rr]elease/*
 [Rr]eleases/
 x64/
 build/
 bld/
-[Bb]in/
-[Oo]bj/
+[Bb]in/*
+[Oo]bj/   
 
 # Roslyn cache directories
 *.ide/
@@ -187,12 +187,13 @@ FakesAssemblies/
 git_stats/*
 
 *.ncrunchproject
-StyleCop.Cache
-bin
-obj
-/**/bin/Debug
-/**/bin/Release
+StyleCop.Cache  
 
-!Specto/bin/Release/Specto.exe
-!Specto/bin/Release/Newtonsoft.Json.dll
-!Specto/bin/Release/CSCore.dll
+
+!*/Release 
+*app.publish/
+*.exe.config
+*.exe.manifest
+*setup.exe
+*.xml
+*.application
