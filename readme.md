@@ -108,6 +108,6 @@ void setColor(const int *r, const int *g, const int *b)
 }
 ```
 ## Download
-MSI Installer: [Dropbox](https://www.dropbox.com/home?preview=SpectoSetup.msi)
+MSI Installer: [Specto 0.9.1](https://www.dropbox.com/home?preview=SpectoSetup.msi)
 ## License
 [MS-PL](https://opensource.org/licenses/MS-PL)
