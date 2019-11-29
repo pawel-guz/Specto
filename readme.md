@@ -108,7 +108,7 @@ void setColor(const int *r, const int *g, const int *b)
 }
 ```
 ## Download
-[Specto 0.9.1]() (.msi)
+[Specto 0.9.1](https://github.com/pawel-guz/Specto/raw/master/Setup/Release/Setup.msi) (.msi)
 
 ## License
 [MS-PL](https://opensource.org/licenses/MS-PL)
