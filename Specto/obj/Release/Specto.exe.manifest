@@ -4,7 +4,7 @@
   <description asmv2:iconFile="ico.ico" xmlns="urn:schemas-microsoft-com:asm.v1" />
   <application />
   <entryPoint>
-    <assemblyIdentity name="Specto" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
+    <assemblyIdentity name="Specto" version="0.9.1.0" language="neutral" processorArchitecture="msil" />
     <commandLine file="Specto.exe" parameters="" />
   </entryPoint>
   <trustInfo>
@@ -67,14 +67,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Specto.exe" size="379776">
-      <assemblyIdentity name="Specto" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Specto.exe" size="379264">
+      <assemblyIdentity name="Specto" version="0.9.1.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>ifHxWX4g+3a4TA3LwY3jAmgpRLIdimYaTyKF8rZ+FeM=</dsig:DigestValue>
+        <dsig:DigestValue>Q2WNycdOhonNRRKNfoYpdv12g4zIIsvM3pothtSmq30=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

@@ -22,7 +22,6 @@ namespace Specto.Audio
 
         private FftProvider fftProvider;
         private WasapiCapture capture;
-        private WaveWriter writer;
         private SingleBlockNotificationStream notificationSource;
         private IWaveSource finalSource;
         private FftSize fftSize;

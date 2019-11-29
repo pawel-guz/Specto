@@ -68,7 +68,7 @@ namespace Specto.Relay
                     received = Client.Receive(ref ep);
                     //DataReceived?.Invoke(this, new DataReceivedEventArgs(Encoding.ASCII.GetString(received), deviceEP));
                 }
-                catch (Exception e)
+                catch
                 {
                     Console.WriteLine("Nothing to receive.");
                 }

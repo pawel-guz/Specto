@@ -37,4 +37,3 @@ D:\pguzp\Documents\GitHub\Specto\Specto\obj\Release\Specto.application
 D:\pguzp\Documents\GitHub\Specto\Specto\obj\Release\Specto.csproj.CopyComplete
 D:\pguzp\Documents\GitHub\Specto\Specto\obj\Release\Specto.exe
 D:\pguzp\Documents\GitHub\Specto\Specto\obj\Release\Specto.pdb
-D:\pguzp\Documents\GitHub\Specto\Specto\obj\Release\Specto.csprojAssemblyReference.cache

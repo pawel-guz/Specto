@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28803.452
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "SpectoSetup", "SpectoSetup\SpectoSetup.vdproj", "{B7A85837-6A5B-4E52-AF4A-A26B433EB4FA}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Specto", "Specto\Specto.csproj", "{2D07C186-A4C6-4F0D-808F-B9087AC54512}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Setup", "Setup\Setup.vdproj", "{4B57E3BB-6AEF-4C48-A08A-C87AE018C0F1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,12 +13,12 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{B7A85837-6A5B-4E52-AF4A-A26B433EB4FA}.Debug|Any CPU.ActiveCfg = Debug
-		{B7A85837-6A5B-4E52-AF4A-A26B433EB4FA}.Release|Any CPU.ActiveCfg = Release
 		{2D07C186-A4C6-4F0D-808F-B9087AC54512}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2D07C186-A4C6-4F0D-808F-B9087AC54512}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2D07C186-A4C6-4F0D-808F-B9087AC54512}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2D07C186-A4C6-4F0D-808F-B9087AC54512}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4B57E3BB-6AEF-4C48-A08A-C87AE018C0F1}.Debug|Any CPU.ActiveCfg = Debug
+		{4B57E3BB-6AEF-4C48-A08A-C87AE018C0F1}.Release|Any CPU.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -67,14 +67,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Specto.exe" size="397184">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Specto.exe" size="397696">
       <assemblyIdentity name="Specto" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>+Uz11RaP/3PgsoiGfuKcusn4z1Pucd5/bgW0ux6aqNo=</dsig:DigestValue>
+        <dsig:DigestValue>iXB0gfUO+QCfknUG30E2bPM8St0Mt3dxMx4NRCHMoo4=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
