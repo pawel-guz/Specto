@@ -9,7 +9,7 @@ Specto is a simple app visualising the music you listen to. Combining it with Ar
 
 ## How does it work?
 
-Specto listens to your audio device (using [CSCore audio library](https://github.com/filoe/cscore) and obtains information about frequencies distribution. Different ranges correspond to different colors. Specto blends them togehter and displays a colorful spectrum. Data is sent to Arduino/other board which takes care of your lighting system.
+Specto listens to your audio device (using [CSCore audio library](https://github.com/filoe/cscore)) and obtains information about frequencies distribution. Different ranges correspond to different colors. Specto blends them togehter and displays a colorful spectrum. Data is sent to Arduino/other board which takes care of your lighting system.
 
 See the result in the video: 
 
