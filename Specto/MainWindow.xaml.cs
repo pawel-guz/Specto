@@ -115,6 +115,7 @@ namespace Specto
         {
             var app = (App)Application.Current;
             Settings.Theme = app.SwitchTheme();
+            FullScreenButton.Content = FindResource(FullScreen ? "NormalScreenIcon" : "FullScreenIcon");
         }
 
         private void SettingsButton_Click(object sender, RoutedEventArgs e)
@@ -170,14 +171,14 @@ namespace Specto
                     WindowState = WindowState.Normal;
 
                 WindowState = WindowState.Maximized;  
-                FullScreenButton.Content = FindResource("NormalScreenIcon");
             }
             else
             { 
                 WindowState = WindowState.Normal;
                 WindowStyle = WindowStyle.SingleBorderWindow; 
-                FullScreenButton.Content = FindResource("FullScreenIcon");
             }
+
+            FullScreenButton.Content = FindResource(FullScreen ? "NormalScreenIcon" : "FullScreenIcon");
         }
 
         private void PulsationButton_Click(object sender, RoutedEventArgs e)

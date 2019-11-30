@@ -162,7 +162,7 @@
         </Grid>
 
         <!--Right settings panel-->
-        <DockPanel Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="1" Margin="0, 0, 10, 5"
+        <DockPanel Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Margin="0, 0, 10, 5"
                    VerticalAlignment="Center" HorizontalAlignment="Right">
 
             <Button Margin="5, 5" Content="{DynamicResource AboutIcon}"
