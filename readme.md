@@ -36,9 +36,9 @@ static const int SERIAL_SIGNAL = 255;
 enum State
 {
     AWAIT,
-    RED,
-    GREEN,
-    BLUE,
+    RED = 9,
+    GREEN = 10,
+    BLUE = 11,
     END
 };
 
