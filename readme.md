@@ -32,15 +32,13 @@ Specto can send visualization data to your board via SerialPort or WiFi - direct
 // RGB values are in (0, 254) range.
 // Color transmission format: [255][red][green][blue]
 
-static const int SERIAL_SIGNAL = 255;
-enum State
-{
-    AWAIT,
-    RED = 9,
-    GREEN = 10,
-    BLUE = 11,
-    END
-};
+#define END             0
+#define AWAIT           1
+#define RED             9
+#define GREEN           10
+#define BLUE            11
+#define SERIAL_SIGNAL   255;
+
 
 byte red, green, blue;    
 byte data, state;
@@ -105,9 +103,10 @@ void loop()
 
 void setColor(const int *r, const int *g, const int *b)
 { 
-    analogWrite(RED, r);
-    analogWrite(GREEN, g);
-    analogWrite(BLUE, b); 
+    // Analog write range is 0-1023. Max color is 1/4 of that.
+    analogWrite(RED,   *r * 4);
+    analogWrite(GREEN, *g * 4);
+    analogWrite(BLUE,  *b * 4); 
 }
 ``` 
 
