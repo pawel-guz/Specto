@@ -23,7 +23,7 @@
     <Color x:Key="SliderTrackLightColor">#FF131313</Color>
     <Color x:Key="SliderTrackDarkColor">#FF131313</Color>
     <Color x:Key="TickBarFillColor">#FF444444</Color>
-
+    
     <SolidColorBrush x:Key="CheckBoxColor">#FF4B4B4B</SolidColorBrush>
     <SolidColorBrush x:Key="BackgroundColor">#FF0A0A0A</SolidColorBrush>
     <SolidColorBrush x:Key="TextColor">#FFCCCCCC</SolidColorBrush>

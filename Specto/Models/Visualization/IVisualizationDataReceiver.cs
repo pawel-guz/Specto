@@ -2,6 +2,6 @@
 {
     public interface IVisualizationDataReceiver
     {
-        void Send(VisualizationData data);
+        void Send(VisualizationData data, bool force = false);
     }
 }

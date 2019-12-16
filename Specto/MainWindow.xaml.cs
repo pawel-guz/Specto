@@ -7,6 +7,10 @@ using Specto.Audio;
 using Specto.Tools; 
 using System.Collections.ObjectModel;
 using System.Windows.Threading;
+using System.Threading.Tasks;
+using System.Collections.Specialized;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Specto
 {
@@ -15,7 +19,7 @@ namespace Specto
         bool FullScreen { get; set; }
         Settings Settings { get; set; }
         AsyncStatusLogger Logger { get; set; }
-        ObservableCollection<IVisualizationDevice> ObservableVisualDevices { get; set; }
+        ObservableCollection<Device> VisualDevices { get; set; }
         IVisualizationDataReceiver VisualizationDrawer { get; set; }
         IColorMixer ColorMixer { get; set; } 
         SpectrumProcessorBase SpectrumProcessorBase { get; set; }
@@ -36,46 +40,35 @@ namespace Specto
 
             // Bind UI elements.
             DataContext = Settings;
-            StatusInfo.DataContext = Logger;
+            StatusInfo.DataContext = Logger; 
 
             SpectrumProcessorBase = new SpectrumProcessorBase(Logger);
             ColorMixer = new ColorVizualization.Basic(); 
             VisualizationDrawer = Drawer;
-            ObservableVisualDevices = new ObservableCollection<IVisualizationDevice>();
-            UDPDevice.OnDevicesChanged += (s, e) => { UpdateDevices(); };
-            UpdateDevices();
+
+            VisualDevices = new ObservableCollection<Device>();
+            Devices.ItemsSource = VisualDevices;
+            Device.DevicesChanged += UpdateDevices; 
 
             // Start timer.
             dispatcherTimer = new DispatcherTimer();
             dispatcherTimer.Tick += UpdateSpectrum;
             dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, 1000 / Settings.RefreshRate);
             dispatcherTimer.Start();
+
+            DetectDevices();
         }
 
-        private void UpdateDevices()
+        private void DetectDevices()
         {
-            try
-            { 
-                SerialDevice.FreeDevices();
-                UDPDevice.FreeDevices();
+            Task.Run(() => Device.DetectDevicesAsync()); 
+        }
 
-                ObservableVisualDevices.Clear();
-
-                SerialDevice.DetectDevices();
-                UDPDevice.DetectDevices(Logger);
-
-                foreach (var device in SerialDevice.Devices)
-                    ObservableVisualDevices.Add(device);
-
-                foreach (var device in UDPDevice.Devices)
-                    ObservableVisualDevices.Add(device);
-
-                Devices.ItemsSource = ObservableVisualDevices;
-            }
-            catch 
-            { 
-                Logger?.Log("Unable to detect devices."); 
-            }
+        private void UpdateDevices(List<Device> devices)
+        {
+            VisualDevices.Clear(); 
+            foreach (var d in devices)
+                VisualDevices.Add((Device)d); 
         }
 
         private void UpdateSpectrum(object sender, EventArgs e)
@@ -94,7 +87,7 @@ namespace Specto
             var data = new VisualizationData(spectrum, color);
 
             // Update devices.
-            foreach (var device in ObservableVisualDevices)
+            foreach (var device in VisualDevices)
                 device.Send(data);
 
             // Update UI.
@@ -132,7 +125,7 @@ namespace Specto
 
         private void RefreshButton_Click(object sender, RoutedEventArgs e)
         {
-            UpdateDevices();
+            DetectDevices();
         }
 
         private void RestoreButton_Click(object sender, RoutedEventArgs e)

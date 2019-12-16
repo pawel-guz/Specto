@@ -13,20 +13,29 @@ namespace Specto.Relay
     {
         public static Reply ParseFrom(string json)
         {
-            Reply reply = JsonConvert.DeserializeObject<Reply>(json);
-            if (reply != null)
-            {
+            Reply reply = null;
 
+            try
+            {
+                reply = JsonConvert.DeserializeObject<Reply>(json);
+            }
+            catch
+            {
+                return reply;
+            }
+
+            if (reply != null)
+            { 
                 JObject json_reply = JObject.Parse(json);
                 JToken json_result = json_reply["result"];
 
                 switch (reply.Type)
                 {
-                    case "networkData": reply = json_result.ToObject<NetworkData>(); break;
-                    case "deviceInfo": reply = json_result.ToObject<DeviceInfo>(); break;
-                    case "setWiFiFeedback": reply = json_result.ToObject<SetWiFiFeedback>(); break;
-                    case "setColorFeedback": reply = json_result.ToObject<SetColorFeedback>(); break;
-                    default: reply = null; break;
+                    case "networkData":         reply = json_result.ToObject<NetworkData>(); break;
+                    case "deviceInfo":          reply = json_result.ToObject<DeviceInfo>(); break;
+                    case "setWiFiFeedback":     reply = json_result.ToObject<SetWiFiFeedback>(); break;
+                    case "setColorFeedback":    reply = json_result.ToObject<SetColorFeedback>(); break;
+                    default:                    reply = null; break;
                 }
             }
             return reply;
@@ -43,11 +52,19 @@ namespace Specto.Relay
             public int SignalStrenght { get; set; }
             [JsonProperty(PropertyName = "isProtected")]
             public bool IsProtected { get; set; }
+            [JsonProperty(PropertyName = "id")]
+            public int Id { get; set; }
+            [JsonProperty(PropertyName = "networksCount")]
+            public int NetworksCount { get; set; }
         }
         public class DeviceInfo : Reply
         {
+            [JsonProperty(PropertyName = "name")]
+            public string Name { get; set; }
             [JsonProperty(PropertyName = "serialNumber")]
-            public long SerialNumber { get; set; }
+            public long SerialNumber { get; set; } 
+            [JsonProperty(PropertyName = "network")]
+            public string NetworkName { get; set; }
         }
 
         public class SetWiFiFeedback : Reply
@@ -147,6 +164,21 @@ namespace Specto.Relay
                 Name = "fetchNetworks";
                 Params = null;
             }
+        }
+
+        public class SetName : Command
+        {
+            public SetName(string name)
+            {
+                Name = "setName";
+                Params =  new NameParams() { Name = name };
+            }
+
+            public class NameParams
+            {
+                [JsonProperty(PropertyName = "name")]
+                public string Name { get; set; }
+            } 
         }
 
         public class GetInfo : Command

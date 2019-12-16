@@ -1,12 +1,14 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:Specto">
+
     
-    <Style TargetType="Button">
-        <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="BorderThickness" Value="0"/>
+    <Style TargetType="Button"> 
         <Setter Property="Foreground" Value="{DynamicResource TextColor}"/>
         <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <!--<Setter Property="FocusVisualStyle" Value="{DynamicResource CustomFocusStyle}"/>-->
         <Setter Property="Opacity" Value="{DynamicResource IconOpacityNormal}"/>
         <Setter Property="Template">
             <Setter.Value>

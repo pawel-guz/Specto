@@ -10,9 +10,8 @@
         WindowState="Normal"
         MinHeight="500" MinWidth="500" WindowStartupLocation="CenterScreen">
     <Window.Resources>
-        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/> 
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>  
     </Window.Resources>
-
     <Grid Background="{DynamicResource BackgroundColor}" Margin="20"
           Opacity="{Binding ThemeOpacity}">
         <Grid.ColumnDefinitions>
@@ -112,14 +111,15 @@
                 <DockPanel DockPanel.Dock="Top" Height="30">
                     <Label DockPanel.Dock="Left" Content="Detected devices:"/>
 
-                    <Button Margin="5" Content="{DynamicResource RefreshIcon}"
+                    <Button Margin="5" Content="{DynamicResource SearchIcon}"
                             Click="RefreshButton_Click" HorizontalAlignment="Right"
                             ToolTip="Rescan"/>
                 </DockPanel>
 
                 <ListView Padding="0" HorizontalContentAlignment="Stretch" 
-                          Background="Transparent" BorderThickness="0"
-                          x:Name="Devices" ScrollViewer.HorizontalScrollBarVisibility="Disabled" >
+                          Background="Transparent" BorderThickness="0" 
+                          x:Name="Devices"  
+                          ScrollViewer.HorizontalScrollBarVisibility="Disabled" >
                     <ListView.ItemContainerStyle>
                         <Style TargetType="{x:Type ListViewItem}">
                             <Setter Property="Focusable" Value="False"/>
@@ -127,36 +127,73 @@
                     </ListView.ItemContainerStyle>
                     <ListView.ItemTemplate>
                         <DataTemplate>
-                            <DockPanel Background="Transparent" >
-                                <DockPanel  DockPanel.Dock="Top" Height="30">
+
+                            <DockPanel Background="Transparent">
+                                <DockPanel  DockPanel.Dock="Top" Height="30"
+                                            >
                                     <CheckBox Margin="10, 0" VerticalAlignment="Center"
-                                              IsChecked="{Binding IsActive}"/>
+                                              IsChecked="{Binding IsActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                              ToolTip="Visualize"/>
                                     <Image  Margin="5"
                                            Source="{DynamicResource WiFiIcon}"
                                            Visibility="{Binding IsWiFi, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                                     <Image Margin="5"
                                            Source="{DynamicResource SerialIcon}"
                                            Visibility="{Binding IsSerial, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                                    <Label VerticalAlignment="Center" Content="Serial No.:"/>
                                     <Label 
                                            VerticalAlignment="Center"
-                                           Content="{Binding SerialNumber}"/>
-
-                                    <Grid  HorizontalAlignment="Right"
-                                                Visibility="{Binding IsWiFi, Converter={StaticResource BooleanToVisibilityConverter}}">
-                                        <ToggleButton VerticalAlignment="Stretch" x:Name="DeviceItemToggle" ToolTip="Configure device">
-                                            <Image  Margin="5" Source="{DynamicResource ConfigureDeviceIcon}"/>
+                                           Content="{Binding Name}"/>
+                                    <Label Content="{Binding ConnectionInfo}" 
+                                        Foreground="{DynamicResource TextColorSecondary}"  
+                                        VerticalAlignment="Center"  />
+                                    <Grid  HorizontalAlignment="Right">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <ToggleButton Grid.Column="0" 
+                                                      VerticalAlignment="Stretch" 
+                                                      x:Name="SetNameToggle"   
+                                                      ToolTip="Set name"
+                                                      Visibility="{Binding IsWiFi, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                            <Image Margin="5" 
+                                                   Source="{DynamicResource RenameIcon}"/>
+                                        </ToggleButton>
+                                        <ToggleButton Grid.Column="1" 
+                                                      VerticalAlignment="Stretch" 
+                                                      x:Name="ConfigureDeviceToggle" 
+                                                      ToolTip="Set network"
+                                                      Command="{Binding FetchNetworksCommand}"
+                                                      Visibility="{Binding IsWiFi, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                            <Image  Margin="5" 
+                                                    Source="{DynamicResource ConfigureDeviceIcon}"/>
+                                        </ToggleButton>
+                                        <ToggleButton Grid.Column="2" 
+                                                      VerticalAlignment="Stretch" 
+                                                      x:Name="SetColorToggle" 
+                                                      Command="{Binding SendColorRequest}" 
+                                                      CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}"
+                                                      ToolTip="Set color">
+                                            <Image Margin="5" 
+                                                   Source="{DynamicResource SendColorIcon}"/>
                                         </ToggleButton>
 
                                     </Grid>
                                 </DockPanel>
 
+                                <local:ColorSetter DockPanel.Dock="Bottom" Margin="10,10,0,0"
+                                                   Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, ElementName=SetColorToggle}"/>
+                                
                                 <local:WiFiSetter DockPanel.Dock="Bottom"
-                                      Margin="10,0,0,0"
-                                      Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, ElementName=DeviceItemToggle}"/>
+                                      Margin="10,10,0,0"  
+                                      Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, ElementName=ConfigureDeviceToggle}"/>
+
+                                <local:NameSetter DockPanel.Dock="Bottom" Margin="10,10,0,0"
+                                                   Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, ElementName=SetNameToggle}"/>
                             </DockPanel>
                         </DataTemplate>
-                    </ListView.ItemTemplate>
+                    </ListView.ItemTemplate> 
                 </ListView>
             </DockPanel>
         </Grid>
@@ -165,34 +202,37 @@
         <DockPanel Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Margin="0, 0, 10, 5"
                    VerticalAlignment="Center" HorizontalAlignment="Right">
 
-            <Button Margin="5, 5" Content="{DynamicResource AboutIcon}"
+            <Button Margin="5, 5, 0, 5" Content="{DynamicResource AboutIcon}"
                     Click="AboutButton_Click"
                     ToolTip="About"
                     Visibility="{Binding ShowSettings, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-            <Button Margin="5, 5" Content="{DynamicResource RestoreIcon}"
+            <Button Margin="5, 5, 0, 5" Content="{DynamicResource RestoreIcon}"
                     Click="RestoreButton_Click"
                     ToolTip="Restore"
                     Visibility="{Binding ShowSettings, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-            <Button Margin="0, 5"   Content="{DynamicResource SaveIcon}"
+            <Button Margin="5, 5, 0, 5"   Content="{DynamicResource SaveIcon}"
                     Click="SaveButton_Click"
                     ToolTip="Save"
                     Visibility="{Binding ShowSettings, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-            <ToggleButton Margin="5, 5"   Content="{DynamicResource DeviceManagerIcon}"
-                    Click="DeviceManagerButton_Click"
-                    ToolTip="Device manager" 
-                    Visibility="{Binding ShowSettings, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-            <Button Margin="0, 5"   Content="{DynamicResource ChangeThemeIcon}"
+
+            <Button Margin="5, 5, 0, 5"   Content="{DynamicResource ChangeThemeIcon}"
                     Click="ChangeThemeButton_Click"
                     ToolTip="Change theme" 
                     Visibility="{Binding ShowSettings, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-            <Slider Orientation="Vertical" Margin="5, 5" 
+            <Slider Orientation="Vertical" 
+                    Margin="5, 5, 0, 5"
                     x:Name="ThemeOpacity" Value="{Binding ThemeOpacity, Mode=TwoWay}" Minimum="0.5" Maximum="1"
                     Visibility="{Binding ShowSettings, Converter={StaticResource BooleanToVisibilityConverter}}" Background="Black"/>
-            <ToggleButton Margin="0, 5" Content="{DynamicResource SlidersIcon}"
+            <ToggleButton Margin="0, 5, 0, 5" Padding="0"
+                          Content="{DynamicResource SlidersIcon}"
                     IsChecked="{Binding ShowSettings, Mode=TwoWay}"
                     ToolTip="Settings"
                     Click="SettingsButton_Click"/>
-            <Button Name="FullScreenButton" Margin="0, 5"   
+            <ToggleButton Margin="0, 5, 0, 5"  Padding="0" Content="{DynamicResource DeviceManagerIcon}"
+                    Click="DeviceManagerButton_Click"
+                    ToolTip="Device manager"/>
+            <Button Name="FullScreenButton" 
+                    Margin="0, 5, 5, 5"   
                     Content="{DynamicResource FullScreenIcon}"
                     Click="FullScreenButton_Click"
                     ToolTip="Full screen" /> 
@@ -201,7 +241,7 @@
         <!--Left log-->
         <DockPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Width="180" Margin="10, 0, 0, 5" HorizontalAlignment="Left">
             <Label x:Name="StatusInfo"
-                   FontSize="10"
+                   FontSize="12"
                    Foreground="{DynamicResource TextColorNotAttracting}" 
                    VerticalAlignment="Center"
                    Content="{Binding Text}"/>

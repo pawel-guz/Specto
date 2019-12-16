@@ -1,117 +1,163 @@
-﻿using System;
+﻿using GalaSoft.MvvmLight.Command;
+using System;
+using System.Linq;
 using System.Collections.Generic;
-using System.Collections.ObjectModel; 
-using System.Net; 
-using System.Threading.Tasks; 
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Net;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Input;
+using System.Windows.Media;
 
 namespace Specto.Relay
 {
-    class UDPDevice : IVisualizationDevice
+    public class UDPDevice : Device
     {
-        #region Static      
-        public static List<UDPDevice> Devices { get; private set; } = new List<UDPDevice>();
+        #region Static       
         private static UDPMessenger BroadcastMessanger = new UDPMessenger(1234);
-        private static ILogger Logger { get; set; }
 
-        public static event EventHandler OnDevicesChanged;
-
-        public static void DetectDevices(ILogger logger)
-        {
-            FreeDevices();
-            Logger = logger;
-
-            DataReceivedEventArgs replyArgs;
-            Reply reply;
-
+        public static async Task GetDevicesAsync()
+        { 
             BroadcastMessanger.SendCommand(new Command.GetInfo());
-            replyArgs = BroadcastMessanger.Listen(50);
-            reply = Reply.ParseFrom(replyArgs.Data);
-
-            if (reply is Reply.DeviceInfo)
+            DataReceivedEventHandler detector = (s, e) =>
             {
-                var deviceInfo = (Reply.DeviceInfo)reply;
-                var device = new UDPDevice(replyArgs.RemoteEndPoint.Address.ToString(), deviceInfo.SerialNumber.ToString());
+                Reply reply = Reply.ParseFrom(e.Data);
 
-                device.DedicatedMessanger.SendCommand(new Command.FetchNetworks());
-                device.DedicatedMessanger.OnDataReceived += (s, e) =>
+                if (reply is Reply.DeviceInfo)
                 {
-                    var async_reply = Reply.ParseFrom(e.Data);
-                    if (async_reply is Reply.NetworkData)
+                    var deviceInfo = (Reply.DeviceInfo)reply;
+                    string serialNumber = deviceInfo.SerialNumber.ToString();
+                    string name = deviceInfo.Name;
+                    name = (name.Length) > 0 ? name : serialNumber; 
+                    bool inNetwork = (deviceInfo.NetworkName.Length > 0);
+
+                    lock (Devices)
                     {
-                        var data = (Reply.NetworkData)async_reply;
-                        var wifiData = new Network.WiFiData(data.SSID, data.IsProtected);
+                        if (Devices.SingleOrDefault(d => d.Name == name) != null)
+                            return;
 
-                        App.Current.Dispatcher.Invoke((Action)delegate 
-                        {
-                            device.AvailableNetworks.Add(wifiData);
-                        });
+                        var device = new UDPDevice(e.RemoteEndPoint.Address.ToString());
+                        device.SerialNumber = serialNumber;
+                        device.Name = name.Length > 0 ? name : serialNumber;
+                        device.ConnectionInfo = inNetwork ? $"via {deviceInfo.NetworkName} network" : "via wifi direct";
+                        device.ConnectionType = inNetwork ? ConnectionType.LAN : ConnectionType.DirectWiFI;
+                        Devices.Add(device);
+                        NotifyDevicesChanged();
                     }
-                };
-                device.DedicatedMessanger.ListenAsync(2000);
-                Devices.Add(device);
-            }
+                }
+            };
 
-        }
-        public static void FreeDevices()
-        {
-            foreach (var d in Devices)
-                d.Dispose();
-
-            Devices.Clear();
+            BroadcastMessanger.OnDataReceived += detector;
+            await BroadcastMessanger.EventListenAsync(300);  
+            BroadcastMessanger.OnDataReceived += detector;
+            
         }
         #endregion
 
+        float fetchNetworksProgress;
+        bool isFetching;
+         
+        public override bool IsWiFi => true;
+
         private IPAddress Address { get; set; }
         private UDPMessenger DedicatedMessanger { get; set; }
-
-        public string Name => "UDP";
-        public bool IsActive { get; set; }
-        public string SerialNumber { get; private set; }
-
-        public ObservableCollection<Network.WiFiData> AvailableNetworks { get; private set; }
-        public bool IsSerial { get { return false; } }
-        public bool IsWiFi { get { return true; } }
-
-
-        private UDPDevice(string ipAddress, string serialNumber)
+        public ObservableCollection<Network.WiFiData> AvailableNetworks { get; private set; } 
+         
+        public float FetchNetworksProgress 
         {
-            Address = IPAddress.Parse(ipAddress);
-            SerialNumber = serialNumber;
-            DedicatedMessanger = new UDPMessenger(1234, Address);
-            AvailableNetworks = new ObservableCollection<Network.WiFiData>();
-            IsActive = true;
+            get => fetchNetworksProgress;
+            set
+            {
+                fetchNetworksProgress = value;
+                RaisePropertyChanged("FetchNetworksProgress");
+            } 
         }
 
-        public void Dispose()
+        public bool IsFetching
         {
+            get => isFetching;
+            set
+            {
+                isFetching = value;
+                RaisePropertyChanged("IsFetching");
+            } 
+        } 
+
+        private UDPDevice(string ipAddress)
+        {
+            Address = IPAddress.Parse(ipAddress);
+            DedicatedMessanger = new UDPMessenger(1234, Address);
+            AvailableNetworks = new ObservableCollection<Network.WiFiData>();
+            IsActive = true; 
+            DedicatedMessanger.OnDataReceived += (s, e) => ProcessDataReceived(s, e); 
+        }
+
+        public override void Dispose()
+        {
+            base.Dispose();
             DedicatedMessanger.Dispose();
         }
 
-        public void Send(VisualizationData data)
-        {
-            if (!IsActive)
-                return;
-
-            string color = data.Color.R.ToString("X2") + data.Color.G.ToString("X2") + data.Color.B.ToString("X2");
-            DedicatedMessanger.SendCommand(new Command.SetColor(color, false));
-        }
-        
-        public async Task ConnectWithNetwork(string ssid, string key)
-        {
-            bool connected = await Task.Run(() => SetNetwork(ssid, key));
-            Logger.Log(connected ? $"Device {SerialNumber}: connected with {ssid} network." :
-                                   $"Device {SerialNumber}: unable to connect with {ssid}");
-            await Task.Delay(500);
-            Logger.Log("");
-            OnDevicesChanged?.Invoke(this, EventArgs.Empty);
+        public override void SendColor(Color color)
+        { 
+            string hexColor = color.R.ToString("X2") + color.G.ToString("X2") + color.B.ToString("X2");
+            DedicatedMessanger.SendCommand(new Command.SetColor(hexColor, false));
         }
 
-        private bool SetNetwork(string ssid, string key)
+
+        public void SetName(string name)
+        {
+            DedicatedMessanger.SendCommand(new Command.SetName(name));
+            Dispose();
+            Device.DetectDevicesAsync();
+        }
+
+        public void ConnectWithNetwork(string ssid, string key)
         {
             DedicatedMessanger.SendCommand(new Command.SetWiFi(ssid, key));
-            var reply = Reply.ParseFrom(DedicatedMessanger.Listen(500).Data);
-            var fb = reply as Reply.SetWiFiFeedback;
-            return fb?.Connected == true;
+            Dispose();
+        }
+
+        public void FetchNetworks()
+        {
+            if (isFetching)
+                return;
+
+            AvailableNetworks.Clear();
+            IsFetching = true;
+            FetchNetworksProgress = 0;
+            DedicatedMessanger.SendCommand(new Command.FetchNetworks()); 
+            Task.Run(() => DedicatedMessanger.EventListenAsync(3000));
+
+            BackgroundWorker listenWorker = new BackgroundWorker();
+            listenWorker.DoWork += (s, e) =>
+            {
+                int t = 0;
+                int interval = 40;
+                int total = 3000;
+                while (t < total)
+                {
+                    Thread.Sleep(interval);
+                    listenWorker.ReportProgress((int)(100f * t / (float)total)); 
+                    t += interval;
+                } 
+            };
+            listenWorker.RunWorkerCompleted += (s, e) => IsFetching = false;
+            listenWorker.ProgressChanged += (s, e) => FetchNetworksProgress = e.ProgressPercentage / 100f;
+            listenWorker.WorkerReportsProgress = true;
+            listenWorker.RunWorkerAsync();
+        }
+
+        private void ProcessDataReceived(object sender, DataReceivedEventArgs e)
+        {  
+            var async_reply = Reply.ParseFrom(e.Data);
+            if (async_reply is Reply.NetworkData)
+            {
+                var data = (Reply.NetworkData)async_reply;
+                var wifiData = new Network.WiFiData(data.SSID, data.IsProtected);
+                App.Current.Dispatcher.Invoke(() => this.AvailableNetworks.Add(wifiData));
+            }
         }
     }
 }

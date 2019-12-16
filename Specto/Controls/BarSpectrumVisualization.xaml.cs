@@ -150,7 +150,7 @@ namespace Specto
             }
         }
 
-        public void Send(VisualizationData data)
+        public void Send(VisualizationData data, bool force = false)
         {
             var brush = new SolidColorBrush(data.Color);
 

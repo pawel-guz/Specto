@@ -1,4 +1,6 @@
-﻿using System; 
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -7,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace Specto.Relay
 {
+    public delegate void DataReceivedEventHandler(object sender, DataReceivedEventArgs e);
     public class DataReceivedEventArgs
     {
         public string Data { get; private set; }
@@ -21,21 +24,20 @@ namespace Specto.Relay
 
     public class UDPMessenger : IDisposable
     {
-        public delegate void DataReceivedEventHandler(object sender, DataReceivedEventArgs e);
-        public event DataReceivedEventHandler OnDataReceived;
-        private event EventHandler OnListenCompleted;
+        public event DataReceivedEventHandler OnDataReceived; 
 
         private UdpClient Client { get; set; }
         private IPEndPoint TargetEP;
         public int Port { get; private set; }
         private bool SpecificMode { get; set; } 
-        private bool IsListening { get; set; }  
+        public bool IsListening { get; private set; }  
+        public float ListeningProgress { get; private set; }
 
         /// <summary>
         /// Creates messanger to communicate via broadcast ip.
         /// </summary> 
         public UDPMessenger(int port)
-        {
+        { 
             Client = new UdpClient { EnableBroadcast = true };
             TargetEP = new IPEndPoint(IPAddress.Broadcast, port); 
             Port = port;
@@ -55,48 +57,73 @@ namespace Specto.Relay
             SpecificMode = true;
         }
 
-        public DataReceivedEventArgs Listen(int ms)
+        public async Task<DataReceivedEventArgs> DirectListenAsync(int ms)
         {
+            if (IsListening)
+                return null;
+
             IPEndPoint ep = (SpecificMode ? TargetEP : new IPEndPoint(IPAddress.Any, 0));
-            IsListening = true;
-            Thread.Sleep(ms);
             byte[] received = null;
+
+            IsListening = true;
+            await Task.Delay(ms); 
             if (Client.Available > 0)
             {
-                try
-                {
-                    received = Client.Receive(ref ep);
-                    //DataReceived?.Invoke(this, new DataReceivedEventArgs(Encoding.ASCII.GetString(received), deviceEP));
-                }
-                catch
-                {
-                    Console.WriteLine("Nothing to receive.");
-                }
+                try { received = Client.Receive(ref ep); }
+                catch { }
             }
-            IsListening = false;
-            OnListenCompleted?.Invoke(this, EventArgs.Empty);
-
+            IsListening = false; 
             return new DataReceivedEventArgs(received == null ? "" : Encoding.ASCII.GetString(received), ep);
         }
 
-        public async Task ListenAsync(int ms)
+        //public async Task<List<DataReceivedEventArgs>> DirectListenForManyAsync(int ms)
+        //{
+        //    if (IsListening)
+        //        return null;
+
+        //    IsListening = true;
+        //    IPEndPoint ep = (SpecificMode ? TargetEP : new IPEndPoint(IPAddress.Any, 0));
+        //    var datas = new List<DataReceivedEventArgs>();
+
+        //    Stopwatch stopwatch = new Stopwatch();
+        //    stopwatch.Start();
+        //    while (stopwatch.ElapsedMilliseconds < ms)
+        //    { 
+        //        var data = await DirectListenAsync(ms / )
+        //        if (data != null)
+        //            datas.Add(data);
+        //    } 
+
+        //    IsListening = false;
+        //    return datas;
+        //}
+
+        public async Task EventListenAsync(int ms)
         {
             IsListening = true;
+            IPEndPoint ep = (SpecificMode ? TargetEP : new IPEndPoint(IPAddress.Any, 0)); 
             Client.BeginReceive(Received, null);
             await Task.Delay(ms);
-            IsListening = false;
+            Client.EndReceive(null, ref ep);
+            IsListening = false; 
         }
-        
-        void Received(IAsyncResult result)
-        {
-            IPEndPoint ep = (SpecificMode ? TargetEP : new IPEndPoint(IPAddress.Any, 0));
-            var received = Client.EndReceive(result, ref ep);
-            OnDataReceived?.Invoke(this, new DataReceivedEventArgs(Encoding.ASCII.GetString(received), ep));
 
-            if(IsListening)
-                Client.BeginReceive(Received, null);
-            else
-                OnListenCompleted?.Invoke(this, EventArgs.Empty);
+        void Received(IAsyncResult result)
+        {  
+            try
+            { 
+                IPEndPoint ep = (SpecificMode ? TargetEP : new IPEndPoint(IPAddress.Any, 0));
+                var received = Client.EndReceive(result, ref ep);
+                if(received != null)
+                    OnDataReceived?.Invoke(this, new DataReceivedEventArgs(Encoding.ASCII.GetString(received), ep));
+
+                if (IsListening)
+                    Client.BeginReceive(Received, null); 
+            }
+            catch
+            {
+                return;
+            }
         }
 
         public void SendCommand(Command message)
@@ -106,25 +133,20 @@ namespace Specto.Relay
                 var msg = message.ParseToJSON();
                 var send_buffer = Encoding.ASCII.GetBytes(msg);
 
-                Client.Send(send_buffer, send_buffer.Length, TargetEP);
-                Console.WriteLine($"Sending {msg} to {TargetEP.Address.ToString()}");
+                try
+                {
+                    Client.Send(send_buffer, send_buffer.Length, TargetEP);
+                }
+                catch { }
             }
         }
 
         
         public void Dispose()
         {
-            OnListenCompleted += (s, e) =>
-            {
-                OnDataReceived = null;
-                Client.Close();
-                Client.Dispose();
-            };
-
-            if (!IsListening)
-            {
-                OnListenCompleted(this, EventArgs.Empty);
-            }
+            OnDataReceived = null;
+            Client.Close();
+            Client.Dispose(); 
         }
     }
 }

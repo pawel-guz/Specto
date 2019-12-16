@@ -3,51 +3,94 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:Specto"
              mc:Ignorable="d">
-    <Grid>
+
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <local:BooleanToVisibilityConverter x:Key="InvBooleanToVisibilityConverter" True="Collapsed" False="Visible"/>
+    </UserControl.Resources>
+
+    <StackPanel >
+        
+        <StackPanel Visibility="{Binding IsFetching, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}">
+            <ProgressBar 
+                     Height="10"
+                     Background="Transparent" 
+                     Foreground="{DynamicResource TextColor}"
+                     BorderThickness="0" 
+                     Minimum="0" Maximum="1"
+                     Value="{Binding FetchNetworksProgress, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                     />
+            <Label>Device is gathering network data.</Label>
+        </StackPanel>
+        
+        <Grid Visibility="{Binding IsFetching, Mode=OneWay, Converter={StaticResource InvBooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="3*"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
-        <Label Grid.Row="0" Grid.Column="0" 
-                                           FontSize="12"
-                                           VerticalAlignment="Center" HorizontalAlignment="Right" Content="SSID:"/>
-        <ComboBox Name="SSID" Grid.Row="0" Grid.Column="1" Height="30"
-                                              Style="{DynamicResource ThemedComboBox}"
-                                              ItemContainerStyle="{DynamicResource ThemedComboBoxItem}"
-                                              Foreground="{DynamicResource TextColor}"
-                                              BorderThickness="0"
-                                              Background="Transparent"
-                                              ItemsSource="{Binding AvailableNetworks}">
-            <ComboBox.ItemTemplate>
-                <DataTemplate>
-                    <Label FontSize="12" Content="{Binding SSID}"/>
-                </DataTemplate>
-            </ComboBox.ItemTemplate>
-        </ComboBox>
-        <Label Grid.Row="1" Grid.Column="0" 
-                                           FontSize="12"
-                                           VerticalAlignment="Center" HorizontalAlignment="Right" Content="Password:"/>
-        <PasswordBox Name="Pass" Grid.Row="1" Grid.Column="1" Height="30"
-                                                 VerticalContentAlignment="Center"
-                                                 TextBlock.TextAlignment="Left"
-                                                 
-                                                 SelectionBrush="{DynamicResource FramesColor}"
-                                                 Padding="6,0,0,0"
-                                                 BorderBrush="Transparent" BorderThickness="1"
-                                                 Background="Transparent" 
-                                                 Foreground="{DynamicResource TextColor}" CaretBrush="{DynamicResource TextColor}"
-                                                 MaxLength="64" VerticalAlignment="Center" >
-        </PasswordBox>
-        <Button Grid.Row="0" Grid.RowSpan="2" Grid.Column="2" 
-                                            Style="{DynamicResource LabelButton}"
-                                            Click="Button_Click"
-                                            Content="Connect"
-                                            Margin="10, 0"/>
-    </Grid>
+            <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions> 
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions> 
+        
+            <Label Grid.Row="0" Grid.Column="0" 
+               Content="SSID:"
+               VerticalAlignment="Center"  />
+            <ComboBox Grid.Row="0" Grid.Column="1" 
+                  Name="SSID" 
+                  Height="30"
+                  Style="{DynamicResource ThemedComboBox}"
+                  ItemContainerStyle="{DynamicResource ThemedComboBoxItem}"
+                  Foreground="Transparent" 
+                  BorderThickness="1"
+                  Background="Transparent"
+                  ItemsSource="{Binding AvailableNetworks}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <Label FontSize="12" Content="{Binding SSID}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+
+            <Label Grid.Row="1" Grid.Column="0"  
+                    Content="Password:"
+                    VerticalAlignment="Center" />
+            <PasswordBox Grid.Row="1" Grid.Column="1" 
+                     Name="Pass" 
+                     Height="30"
+                     VerticalContentAlignment="Center"
+                     TextBlock.TextAlignment="Left"
+                     SelectionBrush="{DynamicResource FramesColor}"
+                     Padding="6,0,0,0"
+                     BorderBrush="Transparent" BorderThickness="1"
+                     Background="Transparent" 
+                     Foreground="{DynamicResource TextColor}"       CaretBrush="{DynamicResource TextColor}"
+                     MaxLength="64" VerticalAlignment="Center" >
+            </PasswordBox>
+
+            <StackPanel Grid.Row="0" Grid.RowSpan="2" Grid.Column="2"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Center">
+                <Button ToolTip="Refresh available networks"
+                        Height="20"
+                        Width="20"
+                        Style="{DynamicResource LabelButton}"
+                        Click="Refresh_Click"   
+                        Margin="5, 0">
+                    <Image Source="{DynamicResource RefreshIcon}"/>
+                </Button>
+                <Button ToolTip="Send credentials to device"
+                        Height="20"
+                        Width="20"
+                        Style="{DynamicResource LabelButton}"
+                        Click="Set_Click"   
+                        Margin="5, 0">
+                    <Image Source="{DynamicResource SendDataIcon}"/>
+                </Button>
+            </StackPanel>
+        </Grid> 
+    </StackPanel>
 </UserControl>

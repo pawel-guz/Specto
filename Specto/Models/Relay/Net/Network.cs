@@ -14,7 +14,7 @@ namespace Specto.Relay
         {
             public string SSID { get; private set; }
             public string Password { get; set; }
-            public bool IsProtected { get; private set; }
+            public bool IsProtected { get; private set; } 
 
             public WiFiData(string ssid, bool isProtected)
             {
@@ -33,7 +33,7 @@ namespace Specto.Relay
 
                 if (!IsProtected)
                     Password = "";
-            }
+            } 
         }
 
         public static IPAddress GetBroadcastAddress(this IPAddress address) 

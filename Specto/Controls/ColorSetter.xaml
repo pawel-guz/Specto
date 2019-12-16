@@ -1,0 +1,65 @@
+﻿<UserControl x:Class="Specto.ColorSetter"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Specto"
+             mc:Ignorable="d"
+             IsVisibleChanged="UserControl_IsVisibleChanged">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    </UserControl.Resources>
+    <!--<Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>--> 
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+ 
+            <Label  Grid.Row="1" Grid.Column="0">Hue</Label>
+            <Slider Grid.Row="1" Grid.Column="1" 
+                    x:Name="Hue"
+                    VerticalAlignment="Center"
+                    Value="1" Minimum="0" Maximum="360" TickFrequency="60"
+                    LargeChange="36" SmallChange="18"
+                    ValueChanged="ColorChanged"/>
+            <Label  Grid.Row="2" Grid.Column="0">Saturation</Label>
+            <Slider Grid.Row="2" Grid.Column="1" 
+                    x:Name="Saturation"
+                    VerticalAlignment="Center"
+                    Value="1" Minimum="0" Maximum="1" TickFrequency="60"
+                    LargeChange="0.1" SmallChange="0.05"
+                    ValueChanged="ColorChanged"/>
+            <Label  Grid.Row="3" Grid.Column="0">Value</Label>
+            <Slider Grid.Row="3" Grid.Column="1" 
+                    x:Name="Value"
+                    VerticalAlignment="Center"
+                    Value="1" Minimum="0" Maximum="1" TickFrequency="60"
+                    LargeChange="0.1" SmallChange="0.05"
+                    ValueChanged="ColorChanged"/>
+        <Rectangle Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
+                       Height="10"
+                       Margin="0, 10" 
+                       x:Name="ColorPreview"
+                    Fill="{DynamicResource BackgroundColor}"> 
+        </Rectangle>
+        <Label Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2"
+                   Foreground="{DynamicResource TextColorSecondary}"
+                   Visibility="{Binding IsActive, Converter={StaticResource BooleanToVisibilityConverter}}">
+                Disable visualization for this device to see selected color.
+            </Label>
+    </Grid>
+
+    <!--</Grid>-->
+</UserControl>

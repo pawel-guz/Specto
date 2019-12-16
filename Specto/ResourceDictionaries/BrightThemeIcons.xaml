@@ -15,17 +15,20 @@
     <Image x:Key="RestoreIcon" Source="pack://application:,,,/Resources/Icons/Simple/icons8-reboot-50.png"/>
     <Image x:Key="SaveIcon" Source="pack://application:,,,/Resources/Icons/Simple/icons8-save-50.png"/>
     <Image x:Key="ChangeThemeIcon" Source="pack://application:,,,/Resources/Icons/Simple/icons8-change-theme-50.png"/>
-    <Image x:Key="RefreshIcon" Source="pack://application:,,,/Resources/Icons/Simple/icons8-search-50.png"/>
+    <Image x:Key="SearchIcon" Source="pack://application:,,,/Resources/Icons/Simple/icons8-search-50.png"/>
     <Image x:Key="DeviceManagerIcon" Source="pack://application:,,,/Resources/Icons/Simple/icons8-device-manager-50.png"/>
     <Image x:Key="AdaptiveThresholdIcon" Source="pack://application:,,,/Resources/Icons/Simple/icons8-circled-a-50.png"/>
     <Image x:Key="AboutIcon" Source="pack://application:,,,/Resources/Icons/Simple/icons8-info-50.png"/>
     <Image x:Key="FullScreenIcon" Source="pack://application:,,,/Resources/Icons/Simple/icons8-full-screen-50.png"/>
     <Image x:Key="NormalScreenIcon" Source="pack://application:,,,/Resources/Icons/Simple/icons8-normal-screen-50.png"/>
-    
+
+    <BitmapImage x:Key="RenameIcon" UriSource="pack://application:,,,/Resources/Icons/Simple/icons8-rename-50.png"/>
+    <BitmapImage x:Key="RefreshIcon" UriSource="pack://application:,,,/Resources/Icons/Simple/icons8-refresh-50.png"/>
+    <BitmapImage x:Key="SendDataIcon" UriSource="pack://application:,,,/Resources/Icons/Simple/icons8-export-50.png"/>
     <BitmapImage x:Key="ToggleOnIcon" UriSource="/Resources/Icons/Simple/icons8-toggle-on-50.png"/>
     <BitmapImage x:Key="ToggleOffIcon" UriSource="/Resources/Icons/Simple/icons8-toggle-off-50.png"/>
     <BitmapImage x:Key="WiFiIcon" UriSource="/Resources/Icons/Simple/icons8-wi-fi-50.png"/>
     <BitmapImage x:Key="SerialIcon" UriSource="/Resources/Icons/Simple/icons8-rs-232-male-50.png"/>
-    <BitmapImage x:Key="ConfigureDeviceIcon" UriSource="/Resources/Icons/Simple/icons8-database-administrator-50.png"/>
-
+    <BitmapImage x:Key="ConfigureDeviceIcon" UriSource="/Resources/Icons/Simple/icons8-database-administrator-50.png"/> 
+    <BitmapImage x:Key="SendColorIcon" UriSource="/Resources/Icons/Simple/icons8-paint-palette-50.png"/>
 </ResourceDictionary>
